@@ -93,7 +93,7 @@ namespace ModernIndustrial {
                     float halfCell = CellSize / 2f;
                     float thickness = 5f;
 
-                    Vector2 start = new((firstdot?.X ?? 0) + halfCell, (firstdot?.Y ?? 0) + halfCell);
+                    Vector2 start = new((firstdot?.X ?? 0) + (CellSize * 0.25f), (firstdot?.Y ?? 0) + (CellSize * 0.25f));
                     Vector2 end = new(snappedScreen.X + halfCell, snappedScreen.Y + halfCell);
 
                     float dx = end.X - start.X;
@@ -101,12 +101,13 @@ namespace ModernIndustrial {
                     float length = MathF.Sqrt(dx * dx + dy * dy);
                     float rotation = MathF.Atan2(dy, dx) * (180f / MathF.PI);
 
-                    DrawRectanglePro(
-                        new((start.X + end.X) / 2f, (start.Y + end.Y) / 2f, length, thickness),
-                        new(length / 2f, thickness / 2f),
-                        rotation,
-                        Color.White
-                    );
+                    if (firstdot != null)
+                        DrawRectanglePro(
+                            new((start.X + end.X) / 2f, (start.Y + end.Y) / 2f, length, thickness),
+                            new(length / 2f, thickness / 2f),
+                            rotation,
+                            Color.Red
+                        );
 
                     // Hover cursor
                     DrawRectangleRec(
