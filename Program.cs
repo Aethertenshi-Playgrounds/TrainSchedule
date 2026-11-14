@@ -22,6 +22,8 @@ namespace ModernIndustrial {
             ClearBackground(Color.Blank);
             EndTextureMode();
 
+            // Phytagoras algorithm
+            Vector2? firstdot = null;
             while (!WindowShouldClose()) {
                 Vector2 mousePos = GetMousePosition();
 
@@ -48,25 +50,27 @@ namespace ModernIndustrial {
                         {
                             gridmapTemp.Add(snappedWorld);
                         }
+                        if (firstdot == null)
+                            firstdot = new(snappedWorld.X + quarter, snappedWorld.Y + quarter);
 
                         // Draw the cell's centered core (optional, if not already drawn elsewhere)
                         DrawRectangleRec(new(snappedWorld.X + quarter, snappedWorld.Y + quarter, half, half), Color.White);
 
-                        // Check Left (-X)
-                        if (gridmapTemp.Contains(new(snappedWorld.X - CellSize, snappedWorld.Y)))
-                            DrawRectangleRec(new(snappedWorld.X - quarter, snappedWorld.Y + quarter, half, half), Color.White);
+                        // // Check Left (-X)
+                        // if (gridmapTemp.Contains(new(snappedWorld.X - CellSize, snappedWorld.Y)))
+                        //     DrawRectangleRec(new(snappedWorld.X - quarter, snappedWorld.Y + quarter, half, half), Color.White);
 
-                        // Check Right (+X)
-                        if (gridmapTemp.Contains(new(snappedWorld.X + CellSize, snappedWorld.Y)))
-                            DrawRectangleRec(new(snappedWorld.X + threeQuarter, snappedWorld.Y + quarter, half, half), Color.White);
+                        // // Check Right (+X)
+                        // if (gridmapTemp.Contains(new(snappedWorld.X + CellSize, snappedWorld.Y)))
+                        //     DrawRectangleRec(new(snappedWorld.X + threeQuarter, snappedWorld.Y + quarter, half, half), Color.White);
 
-                        // Check Up (-Y in Raylib)
-                        if (gridmapTemp.Contains(new(snappedWorld.X, snappedWorld.Y - CellSize)))
-                            DrawRectangleRec(new(snappedWorld.X + quarter, snappedWorld.Y - quarter, half, half), Color.White);
+                        // // Check Up (-Y in Raylib)
+                        // if (gridmapTemp.Contains(new(snappedWorld.X, snappedWorld.Y - CellSize)))
+                        //     DrawRectangleRec(new(snappedWorld.X + quarter, snappedWorld.Y - quarter, half, half), Color.White);
 
-                        // Check Down (+Y in Raylib)
-                        if (gridmapTemp.Contains(new(snappedWorld.X, snappedWorld.Y + CellSize)))
-                            DrawRectangleRec(new(snappedWorld.X + quarter, snappedWorld.Y + threeQuarter, half, half), Color.White);
+                        // // Check Down (+Y in Raylib)
+                        // if (gridmapTemp.Contains(new(snappedWorld.X, snappedWorld.Y + CellSize)))
+                        //     DrawRectangleRec(new(snappedWorld.X + quarter, snappedWorld.Y + threeQuarter, half, half), Color.White);
                         
                         DrawRectangleRec(new(snappedWorld.X + (CellSize*0.25f), snappedWorld.Y + (CellSize*0.25f), CellSize*0.5f, CellSize*0.5f), Color.White);
                     EndTextureMode();
@@ -85,7 +89,30 @@ namespace ModernIndustrial {
                 // Hover cursor aligned to the panned grid
                 if (IsWindowFocused()) {
                     Vector2 snappedScreen = snappedWorld + relPos;
-                    DrawRectangleRec(new(snappedScreen.X, snappedScreen.Y, CellSize, CellSize), new(255, 255, 255, 50));
+
+                    float halfCell = CellSize / 2f;
+                    float thickness = 5f;
+
+                    Vector2 start = new((firstdot?.X ?? 0) + halfCell, (firstdot?.Y ?? 0) + halfCell);
+                    Vector2 end = new(snappedScreen.X + halfCell, snappedScreen.Y + halfCell);
+
+                    float dx = end.X - start.X;
+                    float dy = end.Y - start.Y;
+                    float length = MathF.Sqrt(dx * dx + dy * dy);
+                    float rotation = MathF.Atan2(dy, dx) * (180f / MathF.PI);
+
+                    DrawRectanglePro(
+                        new((start.X + end.X) / 2f, (start.Y + end.Y) / 2f, length, thickness),
+                        new(length / 2f, thickness / 2f),
+                        rotation,
+                        Color.White
+                    );
+
+                    // Hover cursor
+                    DrawRectangleRec(
+                        new(snappedScreen.X, snappedScreen.Y, CellSize, CellSize),
+                        new Color(255, 255, 255, 50)
+                    );
                 }
 
                 EndDrawing();
