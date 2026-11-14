@@ -2,7 +2,7 @@
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 
-namespace ModernIndustrial {
+namespace TrainSchedule {
     public class MainGame {
         private const int CellSize = 60;
 
@@ -93,7 +93,7 @@ namespace ModernIndustrial {
                     float halfCell = CellSize / 2f;
                     float thickness = 5f;
 
-                    Vector2 start = new((firstdot?.X ?? 0) + (CellSize * 0.25f), (firstdot?.Y ?? 0) + (CellSize * 0.25f));
+                    Vector2 start = new Vector2((firstdot?.X ?? 0) + (CellSize * 0.25f), (firstdot?.Y ?? 0) + (CellSize * 0.25f)) + relPos;
                     Vector2 end = new(snappedScreen.X + halfCell, snappedScreen.Y + halfCell);
 
                     float dx = end.X - start.X;
