@@ -1,3 +1,3 @@
-namespace ModernIndustrial.Helper{
+namespace TrainSchedule.Helper{
 
 }
