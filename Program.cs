@@ -1,8 +1,23 @@
 ﻿using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
+using static TrainSchedule.Helper;
 
 namespace TrainSchedule {
+    public static class AssetsPreset
+    {
+        public static AssetContainer TrainStationSmall = new(new(), new(180, 120));
+
+        public static void InitAsset()
+        {
+            TrainStationSmall.EnableContainerHighlight(true);
+            TrainStationSmall.StartRecording();
+                DrawRectangle(75, 15, 30, 30, Color.White);
+                DrawRectangle(15, 50, 150, 20, Color.White);
+                DrawText("Train Station \nSmall", 15, 75, 20, Color.White);
+            TrainStationSmall.EndRecording();
+        }
+    }
     public class MainGame {
         private const int CellSize = 60;
 
@@ -11,6 +26,8 @@ namespace TrainSchedule {
         public static void Main() {
             InitWindow(1280, 720, "MI Game");
             SetTargetFPS(60);
+
+            AssetsPreset.InitAsset();
 
             Vector2 lastMousePos = Vector2.Zero;
             Vector2 originRelPos = Vector2.Zero;
@@ -79,12 +96,15 @@ namespace TrainSchedule {
                 BeginDrawing();
                 ClearBackground(Color.Black);
 
+
                 DrawTextureRec(
                     gridmap2d.Texture,
                     new(0, 0, gridmap2d.Texture.Width, -gridmap2d.Texture.Height),
                     relPos,
                     Color.White
                 );
+
+                AssetsPreset.TrainStationSmall.DrawAsset(relPos, Color.White);
 
                 // Hover cursor aligned to the panned grid
                 if (IsWindowFocused()) {
